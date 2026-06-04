@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LifeReady — First Aid Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --red:      #d0271d;
+    --red-dark: #a51f17;
+    --red-pale: #fdf2f1;
+    --navy:     #0c1f3f;
+    --navy-mid: #1a3260;
+    --white:    #ffffff;
+    --off:      #f5f6f8;
+    --muted:    #6b7280;
+    --border:   #e5e7eb;
+    --ff-head:  'Fraunces', Georgia, serif;
+    --ff-body:  'DM Sans', sans-serif;
+    --r:        10px;
+    --shadow:   0 4px 24px rgba(12,31,63,.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--ff-body); color: var(--navy); background: var(--white); line-height: 1.65; }
+  a { text-decoration: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+  ul { list-style: none; }
+  svg { display: block; }
+
+  /* TOP BAR */
+  .topbar { background: var(--navy); color: rgba(255,255,255,.75); font-size: .8rem; padding: .5rem 0; }
+  .topbar-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .topbar a { color: rgba(255,255,255,.8); transition: color .2s; display: flex; align-items: center; gap: .4rem; }
+  .topbar a:hover { color: #fff; }
+  .topbar-left, .topbar-right { display: flex; gap: 1.5rem; align-items: center; }
+  .topbar svg { width: 13px; height: 13px; flex-shrink: 0; opacity: .7; }
+
+  /* HEADER */
+  header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 999; box-shadow: 0 2px 12px rgba(12,31,63,.07); }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 1.5rem; }
+  .logo { display: flex; align-items: center; gap: .75rem; }
+  .logo-badge { width: 44px; height: 44px; border-radius: 10px; background: var(--red); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo-badge svg { width: 22px; height: 22px; }
+  .logo-text { font-family: var(--ff-head); font-weight: 700; font-size: 1.35rem; color: var(--navy); line-height: 1.1; }
+  .logo-sub  { font-family: var(--ff-body); font-weight: 400; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  nav { display: flex; align-items: center; }
+  .nav-link { padding: .5rem .9rem; font-size: .88rem; font-weight: 500; color: var(--navy); border-radius: 6px; transition: background .2s, color .2s; white-space: nowrap; }
+  .nav-link:hover { background: var(--red-pale); color: var(--red); }
+  .nav-cta { margin-left: .5rem; background: var(--red); color: #fff; padding: .55rem 1.25rem; border-radius: 50px; font-size: .88rem; font-weight: 600; transition: background .2s, transform .15s; white-space: nowrap; }
+  .nav-cta:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero { background: var(--navy); position: relative; overflow: hidden; padding: 5.5rem 1.5rem 4.5rem; }
+  .hero::before, .hero::after { content: ''; position: absolute; border-radius: 50%; opacity: .07; pointer-events: none; }
+  .hero::before { width: 700px; height: 700px; background: var(--red); top: -200px; right: -180px; }
+  .hero::after  { width: 400px; height: 400px; background: #fff; bottom: -150px; left: -100px; }
+  .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .hero-badge { display: inline-flex; align-items: center; gap: .5rem; background: rgba(208,39,29,.25); border: 1px solid rgba(208,39,29,.4); color: #ff8a84; border-radius: 50px; font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: .35rem .85rem; margin-bottom: 1.25rem; }
+  .hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff6b63; flex-shrink: 0; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+  .hero h1 { font-family: var(--ff-head); font-weight: 700; font-size: clamp(2.2rem, 4vw, 3.2rem); color: var(--white); line-height: 1.2; margin-bottom: 1.25rem; }
+  .hero h1 em { font-style: italic; color: #ff8a84; }
+  .hero-sub { font-size: 1.05rem; color: rgba(255,255,255,.72); margin-bottom: 2rem; max-width: 460px; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--red); color: #fff; padding: .85rem 2rem; border-radius: 50px; font-weight: 600; font-size: .95rem; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 20px rgba(208,39,29,.35); }
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(208,39,29,.4); }
+  .btn-ghost { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.2); padding: .85rem 2rem; border-radius: 50px; font-weight: 500; font-size: .95rem; transition: background .2s; }
+  .btn-ghost:hover { background: rgba(255,255,255,.18); }
+  .hero-stats { display: flex; gap: 2.5rem; margin-top: 2.5rem; flex-wrap: wrap; }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-num { font-family: var(--ff-head); font-size: 1.9rem; font-weight: 700; color: #fff; line-height: 1; }
+  .stat-label { font-size: .78rem; color: rgba(255,255,255,.55); margin-top: .25rem; text-transform: uppercase; letter-spacing: .06em; }
+
+  /* hero card */
+  .hero-visual { position: relative; }
+  .hero-card-main { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(12px); border-radius: 20px; padding: 2rem; color: #fff; }
+  .hero-card-main h3 { font-family: var(--ff-head); font-size: 1.05rem; margin-bottom: 1rem; color: rgba(255,255,255,.9); letter-spacing: .01em; }
+  .course-list-hero { display: flex; flex-direction: column; gap: .65rem; }
+  .course-item-hero { display: flex; align-items: center; gap: .85rem; background: rgba(255,255,255,.06); border-radius: 10px; padding: .75rem 1rem; font-size: .88rem; transition: background .2s; cursor: default; }
+  .course-item-hero:hover { background: rgba(255,255,255,.12); }
+  .course-icon-wrap { width: 32px; height: 32px; border-radius: 8px; background: rgba(208,39,29,.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .course-icon-wrap svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .course-item-hero .label { flex: 1; }
+  .course-arrow { opacity: .35; font-size: .75rem; font-weight: 300; }
+  .hero-float-badge { position: absolute; bottom: -18px; right: -12px; background: #fff; border-radius: 14px; padding: .9rem 1.1rem; display: flex; align-items: center; gap: .75rem; box-shadow: 0 8px 32px rgba(12,31,63,.22); font-size: .82rem; font-weight: 600; color: var(--navy); }
+  .float-icon-wrap { width: 36px; height: 36px; border-radius: 8px; background: var(--red-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .float-icon-wrap svg { width: 18px; height: 18px; stroke: var(--red); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .float-sub { font-weight: 400; color: var(--muted); font-size: .72rem; margin-top: .1rem; }
+
+  /* TRUST STRIP */
+  .trust-strip { background: var(--red-pale); border-top: 1px solid #f0dedd; border-bottom: 1px solid #f0dedd; padding: 1.1rem 1.5rem; }
+  .trust-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 2.5rem; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: .55rem; font-size: .84rem; font-weight: 500; color: var(--navy); }
+  .trust-item svg { width: 16px; height: 16px; stroke: var(--red); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* SECTION SHELL */
+  section { padding: 5rem 1.5rem; }
+  .sec-inner { max-width: 1200px; margin: 0 auto; }
+  .sec-label { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--red); margin-bottom: .6rem; }
+  .sec-title { font-family: var(--ff-head); font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; color: var(--navy); line-height: 1.25; }
+  .sec-sub { font-size: 1rem; color: var(--muted); margin-top: .75rem; max-width: 580px; }
+  .sec-head { margin-bottom: 3rem; }
+  .sec-head.center { text-align: center; }
+  .sec-head.center .sec-sub { margin-inline: auto; }
+
+  /* COURSES */
+  .courses-bg { background: var(--off); }
+  .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .course-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column; }
+  .course-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .course-card-img { height: 130px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .course-card-img svg.card-hero-icon { width: 52px; height: 52px; stroke: rgba(255,255,255,.55); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .course-card-img .cat-tag { position: absolute; top: .75rem; left: .75rem; background: rgba(12,31,63,.55); color: #fff; font-size: .7rem; font-weight: 600; padding: .25rem .65rem; border-radius: 50px; letter-spacing: .04em; backdrop-filter: blur(4px); }
+  .c1 { background: linear-gradient(135deg,#c0392b,#922b21); }
+  .c2 { background: linear-gradient(135deg,#1a5276,#2980b9); }
+  .c3 { background: linear-gradient(135deg,#1e8449,#27ae60); }
+  .c4 { background: linear-gradient(135deg,#7d6608,#d4ac0d); }
+  .c5 { background: linear-gradient(135deg,#512e5f,#8e44ad); }
+  .c6 { background: linear-gradient(135deg,#0c1f3f,#1a3260); }
+  .course-card-body { padding: 1.25rem 1.25rem 1.5rem; flex: 1; display: flex; flex-direction: column; }
+  .course-card-body h3 { font-size: 1rem; font-weight: 600; margin-bottom: .4rem; }
+  .course-card-body p { font-size: .87rem; color: var(--muted); flex: 1; margin-bottom: 1rem; }
+  .course-meta { display: flex; gap: 1rem; font-size: .78rem; color: var(--muted); margin-bottom: 1rem; flex-wrap: wrap; }
+  .course-meta span { display: flex; align-items: center; gap: .3rem; }
+  .course-meta svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .course-card-footer { display: flex; justify-content: space-between; align-items: center; }
+  .price { font-size: 1rem; font-weight: 700; color: var(--navy); }
+  .price sub { font-size: .7rem; font-weight: 400; color: var(--muted); }
+  .btn-sm { background: var(--red); color: #fff; padding: .5rem 1.1rem; border-radius: 50px; font-size: .82rem; font-weight: 600; transition: background .2s; }
+  .btn-sm:hover { background: var(--red-dark); }
+
+  /* WHY US */
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .why-image-block { position: relative; }
+  .why-img-placeholder { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); border-radius: 20px; height: 420px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .why-img-placeholder svg { width: 80px; height: 80px; stroke: rgba(255,255,255,.12); fill: none; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+  .why-img-placeholder::after { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E"); }
+  .why-float { position: absolute; bottom: 24px; right: -20px; background: var(--white); border-radius: 14px; padding: 1rem 1.25rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: .75rem; font-size: .85rem; font-weight: 600; color: var(--navy); max-width: 210px; }
+  .why-float-icon { width: 38px; height: 38px; border-radius: 10px; background: #fef9ec; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .why-float-icon svg { width: 20px; height: 20px; stroke: #d4a017; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .why-float-sub { font-weight: 400; color: var(--muted); font-size: .72rem; margin-top: .1rem; }
+  .why-features { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
+  .why-feature { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.25rem; background: var(--off); border-radius: var(--r); border-left: 3px solid transparent; transition: border-color .2s, background .2s; }
+  .why-feature:hover { border-color: var(--red); background: var(--red-pale); }
+  .why-feat-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--red-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem; }
+  .why-feat-icon svg { width: 18px; height: 18px; stroke: var(--red); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .why-feat-text h4 { font-size: .95rem; font-weight: 600; margin-bottom: .2rem; }
+  .why-feat-text p  { font-size: .85rem; color: var(--muted); }
+
+  /* HOW IT WORKS */
+  .steps-bg { background: var(--navy); }
+  .steps-bg .sec-title { color: #fff; }
+  .steps-bg .sec-label { color: rgba(208,39,29,.9); }
+  .steps-bg .sec-sub { color: rgba(255,255,255,.6); }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .step-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); border-radius: var(--r); padding: 1.75rem 1.5rem; color: #fff; }
+  .step-num { font-family: var(--ff-head); font-size: 3.5rem; font-weight: 700; color: rgba(255,255,255,.08); line-height: 1; margin-bottom: .5rem; }
+  .step-icon-wrap { width: 44px; height: 44px; border-radius: 11px; background: rgba(208,39,29,.3); display: flex; align-items: center; justify-content: center; margin-bottom: .85rem; }
+  .step-icon-wrap svg { width: 20px; height: 20px; stroke: #ff9e99; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .step-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; }
+  .step-card p { font-size: .85rem; color: rgba(255,255,255,.55); }
+
+  /* TESTIMONIALS */
+  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.5rem; }
+  .review-card { background: var(--off); border: 1px solid var(--border); border-radius: var(--r); padding: 1.75rem; display: flex; flex-direction: column; gap: .9rem; }
+  .stars { display: flex; gap: 3px; }
+  .stars svg { width: 15px; height: 15px; fill: #f59e0b; stroke: none; }
+  .review-text { font-size: .9rem; color: #374151; line-height: 1.75; flex: 1; font-style: italic; }
+  .review-author { display: flex; align-items: center; gap: .75rem; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; font-family: var(--ff-head); letter-spacing: .02em; }
+  .author-name { font-weight: 600; font-size: .88rem; }
+  .author-role { font-size: .78rem; color: var(--muted); }
+
+  /* CTA BAND */
+  .cta-band { background: var(--red); padding: 4.5rem 1.5rem; text-align: center; }
+  .cta-band h2 { font-family: var(--ff-head); font-size: clamp(1.75rem,3vw,2.6rem); font-weight: 700; color: #fff; margin-bottom: .75rem; }
+  .cta-band p { color: rgba(255,255,255,.8); font-size: 1.05rem; margin-bottom: 2rem; }
+  .cta-btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-white { background: #fff; color: var(--red); padding: .85rem 2rem; border-radius: 50px; font-weight: 700; font-size: .95rem; transition: transform .15s, box-shadow .2s; }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.15); }
+  .btn-outline-white { border: 2px solid rgba(255,255,255,.6); color: #fff; padding: .85rem 2rem; border-radius: 50px; font-weight: 600; font-size: .95rem; transition: border-color .2s, background .2s; }
+  .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,.12); }
+
+  /* FOOTER */
+  footer { background: var(--navy); color: rgba(255,255,255,.6); font-size: .85rem; }
+  .footer-main { max-width: 1200px; margin: 0 auto; padding: 3.5rem 1.5rem 2rem; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+  .footer-brand .logo-text { color: #fff; font-size: 1.2rem; }
+  .footer-brand p { margin-top: .75rem; font-size: .85rem; line-height: 1.7; color: rgba(255,255,255,.5); }
+  .footer-social { display: flex; gap: .6rem; margin-top: 1.25rem; }
+  .soc-btn { width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .soc-btn:hover { background: var(--red); }
+  .soc-btn svg { width: 15px; height: 15px; fill: rgba(255,255,255,.75); stroke: none; }
+  .footer-col h4 { font-family: var(--ff-head); font-size: .9rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
+  .footer-col ul { display: flex; flex-direction: column; gap: .55rem; }
+  .footer-col ul a { color: rgba(255,255,255,.5); transition: color .2s; }
+  .footer-col ul a:hover { color: #fff; }
+  .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem; border-top: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
+  .footer-bottom a { color: rgba(255,255,255,.4); margin-left: 1.25rem; transition: color .2s; }
+  .footer-bottom a:hover { color: #fff; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-visual { display: none; }
+    .why-grid    { grid-template-columns: 1fr; }
+    .why-image-block { display: none; }
+    .footer-main { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  }
+  @media (max-width: 640px) {
+    nav .nav-link { display: none; }
+    .footer-main { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <a href="tel:+254700000000">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.37 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +254 700 000 000
+      </a>
+      <a href="mailto:info@lifeready.co.ke">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        info@lifeready.co.ke
+      </a>
+    </div>
+    <div class="topbar-right">
+      <a href="#">Online Courses</a>
+      <a href="#">Corporate Training</a>
+      <a href="#">Find a Centre</a>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-badge">
+        <!-- cross / plus icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">LifeReady</div>
+        <div class="logo-sub">First Aid Training</div>
+      </div>
+    </div>
+    <nav>
+      <a class="nav-link" href="#">Courses</a>
+      <a class="nav-link" href="#">For Business</a>
+      <a class="nav-link" href="#">About</a>
+      <a class="nav-link" href="#">Resources</a>
+      <a class="nav-cta"  href="#">Book a Course</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Award-Winning Training Provider
+      </div>
+      <h1>Be <em>Prepared</em> to Save a Life</h1>
+      <p class="hero-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum. Donec in efficitur leo, in commodo lorem.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary">Browse All Courses</a>
+        <a href="#" class="btn-ghost">View Schedule &rarr;</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num">12,000+</span><span class="stat-label">People Trained</span></div>
+        <div class="stat-item"><span class="stat-num">98%</span><span class="stat-label">Pass Rate</span></div>
+        <div class="stat-item"><span class="stat-num">20+</span><span class="stat-label">Courses Offered</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card-main">
+        <h3>Popular Courses</h3>
+        <div class="course-list-hero">
+
+          <div class="course-item-hero">
+            <div class="course-icon-wrap">
+              <!-- heartbeat -->
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <span class="label">Emergency First Aid at Work</span>
+            <span class="course-arrow">&rsaquo;</span>
+          </div>
+
+          <div class="course-item-hero">
+            <div class="course-icon-wrap">
+              <!-- heart -->
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <span class="label">CPR &amp; AED Certification</span>
+            <span class="course-arrow">&rsaquo;</span>
+          </div>
+
+          <div class="course-item-hero">
+            <div class="course-icon-wrap">
+              <!-- users -->
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="label">Paediatric First Aid</span>
+            <span class="course-arrow">&rsaquo;</span>
+          </div>
+
+          <div class="course-item-hero">
+            <div class="course-icon-wrap">
+              <!-- brain / mind -->
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4"/></svg>
+            </div>
+            <span class="label">Mental Health First Aid</span>
+            <span class="course-arrow">&rsaquo;</span>
+          </div>
+
+          <div class="course-item-hero">
+            <div class="course-icon-wrap">
+              <!-- activity -->
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <span class="label">Sports &amp; Activity First Aid</span>
+            <span class="course-arrow">&rsaquo;</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="hero-float-badge">
+        <div class="float-icon-wrap">
+          <!-- award / certificate -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        </div>
+        <div>
+          <div>Nationally Recognised</div>
+          <div class="float-sub">Certificates issued on completion</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Nationally Accredited
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Expert Medical Instructors
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Certificates Valid 3 Years
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      In-Person &amp; Online Options
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Flexible Scheduling
+    </div>
+  </div>
+</div>
+
+<!-- COURSES -->
+<section class="courses-bg">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <p class="sec-label">What We Offer</p>
+      <h2 class="sec-title">Find the Right Course for You</h2>
+      <p class="sec-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus.</p>
+    </div>
+    <div class="courses-grid">
+
+      <div class="course-card">
+        <div class="course-card-img c1">
+          <span class="cat-tag">Workplace</span>
+          <svg class="card-hero-icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="course-card-body">
+          <h3>Emergency First Aid at Work</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus.</p>
+          <div class="course-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 1 Day</span>
+            <span><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> In-Person</span>
+            <span><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Up to 12</span>
+          </div>
+          <div class="course-card-footer">
+            <div class="price">KES 8,500 <sub>/person</sub></div>
+            <a href="#" class="btn-sm">Enrol Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-card-img c2">
+          <span class="cat-tag">Certification</span>
+          <svg class="card-hero-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="course-card-body">
+          <h3>CPR &amp; AED Certification</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna vel scelerisque.</p>
+          <div class="course-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Half Day</span>
+            <span><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Hybrid</span>
+            <span><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Up to 16</span>
+          </div>
+          <div class="course-card-footer">
+            <div class="price">KES 4,200 <sub>/person</sub></div>
+            <a href="#" class="btn-sm">Enrol Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-card-img c3">
+          <span class="cat-tag">Paediatric</span>
+          <svg class="card-hero-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="course-card-body">
+          <h3>Paediatric First Aid</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis risus eget urna mollis ornare vel.</p>
+          <div class="course-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 2 Days</span>
+            <span><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> In-Person</span>
+            <span><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Up to 12</span>
+          </div>
+          <div class="course-card-footer">
+            <div class="price">KES 12,000 <sub>/person</sub></div>
+            <a href="#" class="btn-sm">Enrol Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-card-img c4">
+          <span class="cat-tag">Mental Health</span>
+          <svg class="card-hero-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <div class="course-card-body">
+          <h3>Mental Health First Aid</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed odio dui. Etiam porta sem malesuada.</p>
+          <div class="course-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 2 Days</span>
+            <span><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Online</span>
+            <span><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Up to 20</span>
+          </div>
+          <div class="course-card-footer">
+            <div class="price">KES 10,500 <sub>/person</sub></div>
+            <a href="#" class="btn-sm">Enrol Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-card-img c5">
+          <span class="cat-tag">Sports</span>
+          <svg class="card-hero-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="course-card-body">
+          <h3>Sports &amp; Activity First Aid</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras mattis consectetur purus sit amet fermentum.</p>
+          <div class="course-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 1 Day</span>
+            <span><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> In-Person</span>
+            <span><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Up to 14</span>
+          </div>
+          <div class="course-card-footer">
+            <div class="price">KES 7,800 <sub>/person</sub></div>
+            <a href="#" class="btn-sm">Enrol Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-card-img c6">
+          <span class="cat-tag">Corporate</span>
+          <svg class="card-hero-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="course-card-body">
+          <h3>Corporate On-Site Training</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit.</p>
+          <div class="course-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Custom</span>
+            <span><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Your Premises</span>
+          </div>
+          <div class="course-card-footer">
+            <div class="price">Custom Quote</div>
+            <a href="#" class="btn-sm">Enquire</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section>
+  <div class="sec-inner">
+    <div class="why-grid">
+      <div class="why-image-block">
+        <div class="why-img-placeholder">
+          <!-- large cross -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+        </div>
+        <div class="why-float">
+          <div class="why-float-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <div>4.9 / 5 Rating</div>
+            <div class="why-float-sub">From 2,400+ verified reviews</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="sec-label">Why Choose Us</p>
+        <h2 class="sec-title">Trusted Training You Can Rely On</h2>
+        <p class="sec-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor fringilla.</p>
+        <div class="why-features">
+
+          <div class="why-feature">
+            <div class="why-feat-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <div class="why-feat-text">
+              <h4>Expert Instructors</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed.</p>
+            </div>
+          </div>
+
+          <div class="why-feature">
+            <div class="why-feat-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            </div>
+            <div class="why-feat-text">
+              <h4>Nationally Recognised Certificates</h4>
+              <p>Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis.</p>
+            </div>
+          </div>
+
+          <div class="why-feature">
+            <div class="why-feat-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="why-feat-text">
+              <h4>Flexible Delivery Options</h4>
+              <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+            </div>
+          </div>
+
+          <div class="why-feature">
+            <div class="why-feat-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <div class="why-feat-text">
+              <h4>Corporate &amp; Group Packages</h4>
+              <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Aenean eu leo quam pellentesque.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps-bg">
+  <div class="sec-inner">
+    <div class="sec-head center">
+      <p class="sec-label">Simple Process</p>
+      <h2 class="sec-title">How It Works</h2>
+      <p class="sec-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna vel scelerisque nisl.</p>
+    </div>
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Choose Your Course</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3>Pick a Date &amp; Venue</h3>
+        <p>Donec ullamcorper nulla non metus auctor fringilla. Etiam porta sem malesuada magna.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <h3>Book &amp; Pay Online</h3>
+        <p>Cras mattis consectetur purus sit amet fermentum. Nullam id dolor id nibh ultricies.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        </div>
+        <h3>Get Certified</h3>
+        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna vel.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="sec-inner">
+    <div class="sec-head center">
+      <p class="sec-label">Testimonials</p>
+      <h2 class="sec-title">What Our Students Say</h2>
+      <p class="sec-sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas faucibus mollis interdum.</p>
+    </div>
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="review-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus et magnis dis parturient montes."</p>
+        <div class="review-author">
+          <div class="avatar">JM</div>
+          <div>
+            <div class="author-name">Jane Muthoni</div>
+            <div class="author-role">HR Manager, Nairobi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="review-text">"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. Donec velit neque, auctor sit amet aliquam vel."</p>
+        <div class="review-author">
+          <div class="avatar">DK</div>
+          <div>
+            <div class="author-name">David Kamau</div>
+            <div class="author-role">School Principal, Mombasa</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="review-text">"Praesent commodo cursus magna, vel scelerisque nisl consectetur. Nullam quis risus eget urna mollis ornare vel eu leo."</p>
+        <div class="review-author">
+          <div class="avatar">FO</div>
+          <div>
+            <div class="author-name">Fatuma Omar</div>
+            <div class="author-role">Sports Coach, Kisumu</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div>
+    <h2>Ready to Get Certified?</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.</p>
+    <div class="cta-btn-group">
+      <a href="#" class="btn-white">Browse Courses</a>
+      <a href="#" class="btn-outline-white">Contact Us</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div class="logo-text">LifeReady</div>
+      </div>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere.</p>
+      <div class="footer-social">
+        <!-- Facebook -->
+        <a class="soc-btn" href="#" title="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <!-- Twitter/X -->
+        <a class="soc-btn" href="#" title="X / Twitter"><svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" stroke-width="2" stroke="rgba(255,255,255,.75)" fill="none" stroke-linecap="round"/></svg></a>
+        <!-- LinkedIn -->
+        <a class="soc-btn" href="#" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <!-- Instagram -->
+        <a class="soc-btn" href="#" title="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Courses</h4>
+      <ul>
+        <li><a href="#">Emergency First Aid</a></li>
+        <li><a href="#">CPR &amp; AED</a></li>
+        <li><a href="#">Paediatric First Aid</a></li>
+        <li><a href="#">Mental Health</a></li>
+        <li><a href="#">Sports First Aid</a></li>
+        <li><a href="#">All Courses</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Instructors</a></li>
+        <li><a href="#">Accreditation</a></li>
+        <li><a href="#">Reviews</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+254700000000">+254 700 000 000</a></li>
+        <li><a href="mailto:info@lifeready.co.ke">info@lifeready.co.ke</a></li>
+        <li><a href="#">Nairobi, Kenya</a></li>
+        <li style="margin-top:.5rem"><a href="#">Mon &ndash; Fri &nbsp; 8am &ndash; 6pm</a></li>
+        <li><a href="#">Saturday &nbsp; 9am &ndash; 2pm</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; 2026 LifeReady Training Ltd. All rights reserved.</span>
+    <div>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
